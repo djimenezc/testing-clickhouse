@@ -1,3 +1,9 @@
 clickhouse-backup.tar.gz
 clickhouse-backup/
 .idea/
+clickhouse_db_vol1/
+clickhouse_db_vol2/
+logs1/
+logs2/
+download/
+temporal

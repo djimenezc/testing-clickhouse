@@ -10,3 +10,8 @@ Links:
 - https://hub.docker.com/r/yandex/clickhouse-server/
 - https://dzone.com/articles/clickhouse-made-easy-getting-started-with-a-few-cl
 - https://github.com/AlexAkulov/clickhouse-backup
+
+
+Kubernetes:
+- copy between pods
+    kubectl cp clickhouse-dev/clickhouse-8974d965b-vzws5:/var/lib/clickhouse ./temporal/

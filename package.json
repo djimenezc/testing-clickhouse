@@ -9,17 +9,19 @@
       "volumes:recreate": "rm -rf $HOME/clickhouse_db_vol1 && rm -rf $HOME/clickhouse_db_vol2 && mkdir $HOME/clickhouse_db_vol1 $HOME/clickhouse_db_vol2",
       "client:connect1": "docker run -it --rm --link clickhouse-server1:clickhouse-server yandex/clickhouse-client --host clickhouse-server",
       "client:connect2": "docker run -it --rm --link clickhouse-server2:clickhouse-server yandex/clickhouse-client --host clickhouse-server",
-      "server:start1": "docker run -d --rm -p 8123:8123 -p 9000:9000 --name clickhouse-server1 --ulimit nofile=262144:262144 --volume=$HOME/clickhouse_db_vol1:/var/lib/clickhouse yandex/clickhouse-server",
+      "server:start1": "docker run -d --rm -p 8123:8123 -p 9000:9000 --name clickhouse-server1 --ulimit nofile=262144:262144  --volume=$PWD/configuration/config.xml:/etc/clickhouse-server/config.xml --volume=$PWD/configuration/user.xml:/etc/clickhouse-server/users.d/user.xml --volume=$PWD/configuration/users.xml:/etc/clickhouse-server/users.xml  --volume=$PWD/logs1:/var/log/clickhouse-server/ --volume=$PWD/clickhouse_db_vol1:/var/lib/clickhouse yandex/clickhouse-server",
       "server:start2": "docker run -d --rm -p 8124:8123 -p 9001:9000 --name clickhouse-server2 --ulimit nofile=262144:262144 --volume=$HOME/clickhouse_db_vol2:/var/lib/clickhouse  yandex/clickhouse-server",
       "server:stop1" : "docker stop clickhouse-server1",
       "server:stop2" : "docker stop clickhouse-server2",
       "server:remove1" : "docker rm clickhouse-server1",
       "server:remove2" : "docker rm clickhouse-server2",
-      "data:download": "rm -rf ontime.tar && wget https://clickhouse-datasets.s3.yandex.net/ontime/partitions/ontime.tar",
+      "server:connectssh1" : "docker exec -it clickhouse-server1 /bin/sh",
+      "data:download": "rm -rf download/ontime.tar && wget https://clickhouse-datasets.s3.yandex.net/ontime/partitions/ontime.tar && mv ontime.tar download",
       "loaddata:server1": "tar xvf ontime.tar -C $HOME/clickhouse_db_vol1",
       "backup:download-binary" : "wget https://github.com/AlexAkulov/clickhouse-backup/releases/download/v0.5.2/clickhouse-backup.tar.gz && tar -zxvf clickhouse-backup.tar.gz",
-      "backup:create:server1" : "\"$HOME/clickhouse_db_vol1:/var/lib/clickhouse\" -e CLICKHOUSE_DATA_PATH=\"/var/lib/clickhouse\" -e CLICKHOUSE_HOST=localhost -e CLICKHOUSE_PORT=9000 -p 8123:8123 -p 9000:9000 alexakulov/clickhouse-backup create \"my_backup_$(date -u +%Y-%m-%dT%H-%M-%S)\"",
-      "backup:ls:server1" : "docker run --rm -it --network host -v \"$HOME/clickhouse_db_vol1:/var/lib/clickhouse\" alexakulov/clickhouse-backup list -c $PWD/clickhouse-backup/config.yml"
+      "backup:create:server1" : "docker run --rm --name clickhouse-create-backup1 --network host -v $PWD/clickhouse_db_vol1:/var/lib/clickhouse -e CLICKHOUSE_DATA_PATH=/var/lib/clickhouse -e CLICKHOUSE_HOST=localhost -e CLICKHOUSE_PORT=9000 -p 8123:8123 -p 9000:9000 alexakulov/clickhouse-backup create \"my_backup_$(date -u +%Y-%m-%dT%H-%M-%S)\"",
+      "backup:clean:server1" : "docker run --rm --name clickhouse-create-backup1 --network host -v $PWD/clickhouse_db_vol1:/var/lib/clickhouse -e CLICKHOUSE_DATA_PATH=/var/lib/clickhouse -e CLICKHOUSE_HOST=localhost -e CLICKHOUSE_PORT=9000 -p 8123:8123 -p 9000:9000 alexakulov/clickhouse-backup clean",
+      "backup:ls:server1" : "docker run --rm --network host -v $PWD/clickhouse_db_vol1:/var/lib/clickhouse -e CLICKHOUSE_DATA_PATH=/var/lib/clickhouse -e CLICKHOUSE_HOST=localhost -e CLICKHOUSE_PORT=9000 -p 8123:8123 -p 9000:9000 alexakulov/clickhouse-backup list"
     }
   }
   

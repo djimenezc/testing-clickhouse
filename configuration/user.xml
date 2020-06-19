@@ -1,0 +1,32 @@
+<yandex>
+    <profiles>
+        <default>
+        </default>
+    </profiles>
+    <users>
+        <!-- If user name was not specified, 'default' user is used. -->
+        <david>
+            <password>admin</password>
+            <!-- Or -->
+            <!--        <password_sha256_hex></password_sha256_hex>-->
+
+            <access_management>1</access_management>
+
+            <networks incl="networks" replace="replace">
+            </networks>
+
+            <profile>default</profile>
+
+            <quota>default</quota>
+
+            <!--        <databases>-->
+            <!--            <database_name>-->
+            <!--                <table_name>-->
+            <!--                     <filter>expression</filter>-->
+            <!--                </table_name>-->
+            <!--            </database_name>-->
+            <!--        </databases>-->
+        </david>
+        <!-- Other users settings -->
+    </users>
+</yandex>
