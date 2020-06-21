@@ -15,3 +15,12 @@ Links:
 Kubernetes:
 - copy between pods
     kubectl cp clickhouse-dev/clickhouse-8974d965b-vzws5:/var/lib/clickhouse ./temporal/
+    
+    
+    
+    
+    https://clickhouse.tech/docs/en/getting-started/tutorial/
+    
+- curl https://clickhouse-datasets.s3.yandex.net/hits/tsv/hits_v1.tsv.xz | unxz --threads=`sysctl -n hw.physicalcpu` > hits_v1.tsv
+nproc
+- curl https://clickhouse-datasets.s3.yandex.net/visits/tsv/visits_v1.tsv.xz | unxz --threads=`sysctl -n hw.physicalcpu` > visits_v1.tsv
