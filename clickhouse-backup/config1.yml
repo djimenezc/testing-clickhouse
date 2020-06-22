@@ -1,0 +1,46 @@
+general:
+  remote_storage: s3
+  disable_progress_bar: false
+  backups_to_keep_local: 0
+  backups_to_keep_remote: 0
+clickhouse:
+  username: default
+  password: ""
+  host: localhost
+  port: 9000
+  data_path: "$HOME/clickhouse_db_vol1"
+  skip_tables:
+  - system.*
+  timeout: 5m
+  freeze_by_part: false
+s3:
+  access_key: ""
+  secret_key: ""
+  bucket: ""
+  endpoint: ""
+  region: us-east-1
+  acl: private
+  force_path_style: false
+  path: ""
+  disable_ssl: false
+  part_size: 104857600
+  compression_level: 1
+  compression_format: gzip
+  sse: ""
+  disable_cert_verification: false
+gcs:
+  credentials_file: ""
+  credentials_json: ""
+  bucket: ""
+  path: ""
+  compression_level: 1
+  compression_format: gzip
+cos:
+  url: ""
+  timeout: 2m
+  secret_id: ""
+  secret_key: ""
+  path: ""
+  compression_format: gzip
+  compression_level: 1
+  debug: false

@@ -19,8 +19,11 @@
 
       "server:start1": "docker run -d --rm -p 8123:8123 -p 9000:9000 --name clickhouse-server1 --ulimit nofile=262144:262144  --volume=$PWD/configuration/config.xml:/etc/clickhouse-server/config.xml --volume=$PWD/configuration/user.xml:/etc/clickhouse-server/users.d/user.xml --volume=$PWD/configuration/users.xml:/etc/clickhouse-server/users.xml  --volume=$PWD/logs1:/var/log/clickhouse-server/ --volume=$PWD/clickhouse_db_vol1:/var/lib/clickhouse yandex/clickhouse-server",
       "server:start2": "docker run -d --rm -p 8124:8123 -p 9001:9000 --name clickhouse-server2 --ulimit nofile=262144:262144 --volume=$PWD/clickhouse_db_vol2:/var/lib/clickhouse  yandex/clickhouse-server",
+      "server:start:francecentral": "docker run -d --rm -p 8125:8123 -p 9002:9000 --name clickhouse-server-francecentral --ulimit nofile=262144:262144 --volume=$PWD/francecentral:/var/lib/clickhouse yandex/clickhouse-server",
+
       "server:stop1" : "docker stop clickhouse-server1",
       "server:stop2" : "docker stop clickhouse-server2",
+      "server:stop:francecentral" : "docker stop clickhouse-server-francecentral",
       "server:remove1" : "docker rm clickhouse-server1",
       "server:remove2" : "docker rm clickhouse-server2",
       "server:connectssh1" : "docker exec -it clickhouse-server1 /bin/sh",
