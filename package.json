@@ -18,9 +18,9 @@
       "client:loadMetricaTables": "npm run client:create:tutorialDb && npm run client:delete:tables && npm run client:create:tables && npm client:loadMetricaData",
       "client:loadMetricaData": "",
 
-      "server:start1": "docker run -d --rm -p 8123:8123 -p 9000:9000 --name clickhouse-server1 --ulimit nofile=262144:262144  --volume=$PWD/configuration/config.xml:/etc/clickhouse-server/config.xml --volume=$PWD/configuration/user.xml:/etc/clickhouse-server/users.d/user.xml --volume=$PWD/configuration/users.xml:/etc/clickhouse-server/users.xml  --volume=$PWD/logs1:/var/log/clickhouse-server/ --volume=$PWD/clickhouse_db_vol1:/var/lib/clickhouse yandex/clickhouse-server",
-      "server:start2": "docker run -d --rm -p 8124:8123 -p 9001:9000 --name clickhouse-server2 --ulimit nofile=262144:262144 --volume=$PWD/clickhouse_db_vol2:/var/lib/clickhouse  yandex/clickhouse-server",
-      "server:start:francecentral": "docker run -d --rm -p 8125:8123 -p 9002:9000 --name clickhouse-server-francecentral --ulimit nofile=262144:262144 --volume=$PWD/logs-francecentral:/var/log/clickhouse-server/ --volume=$PWD/francecentral:/var/lib/clickhouse yandex/clickhouse-server",
+      "server:start1": "docker run -d --rm -p 8123:8123 -p 9000:9000 --name clickhouse-server1 --ulimit nofile=262144:262144  --volume=$PWD/configuration/config.xml:/etc/clickhouse-server/config.xml --volume=$PWD/configuration/user.xml:/etc/clickhouse-server/users.d/user.xml --volume=$PWD/configuration/users.xml:/etc/clickhouse-server/users.xml  --volume=$PWD/logs1:/var/log/clickhouse-server/ --volume=$HOME/tmp/clickhouse-db/clickhouse_db_vol1:/var/lib/clickhouse yandex/clickhouse-server",
+      "server:start2": "docker run -d --rm -p 8124:8123 -p 9001:9000 --name clickhouse-server2 --ulimit nofile=262144:262144 --volume=$HOME/tmp/clickhouse-db/clickhouse_db_vol2:/var/lib/clickhouse  yandex/clickhouse-server",
+      "server:start:francecentral": "docker run -d --rm -p 8125:8123 -p 9002:9000 --name clickhouse-server-francecentral --ulimit nofile=262144:262144 --volume=$PWD/logs-francecentral:/var/log/clickhouse-server/ --volume=$HOME/tmp/clickhouse-db/francecentral:/var/lib/clickhouse yandex/clickhouse-server",
 
       "server:stop1" : "docker stop clickhouse-server1",
       "server:stop2" : "docker stop clickhouse-server2",
@@ -39,10 +39,13 @@
       "data:load:hits": "cat $PWD/download/hits_v1.tsv | docker run -i --rm --link clickhouse-server1:clickhouse-server yandex/clickhouse-client -m --host clickhouse-server  --query \"INSERT INTO tutorial.hits_v1 FORMAT TSV\" --max_insert_block_size=100000",
 
       "backup:download-binary" : "wget https://github.com/AlexAkulov/clickhouse-backup/releases/download/v0.5.2/clickhouse-backup.tar.gz && tar -zxvf clickhouse-backup.tar.gz",
-      "backup:create:server1" : "docker run --rm --name clickhouse-create-backup1 --network host -v $PWD/clickhouse_db_vol1:/var/lib/clickhouse -e CLICKHOUSE_DATA_PATH=/var/lib/clickhouse -e CLICKHOUSE_HOST=localhost -e CLICKHOUSE_PORT=9000 -p 8123:8123 -p 9000:9000 alexakulov/clickhouse-backup create \"my_backup_$(date -u +%Y-%m-%dT%H-%M-%S)\"",
-      "backup:clean:server1" : "docker run --rm --name clickhouse-create-backup1 --network host -v $PWD/clickhouse_db_vol1:/var/lib/clickhouse -e CLICKHOUSE_DATA_PATH=/var/lib/clickhouse -e CLICKHOUSE_HOST=localhost -e CLICKHOUSE_PORT=9000 -p 8123:8123 -p 9000:9000 alexakulov/clickhouse-backup clean",
-      "backup:ls:server1" : "docker run --rm --network host -v $PWD/clickhouse_db_vol1:/var/lib/clickhouse -e CLICKHOUSE_DATA_PATH=/var/lib/clickhouse -e CLICKHOUSE_HOST=localhost -e CLICKHOUSE_PORT=9000 -p 8123:8123 -p 9000:9000 alexakulov/clickhouse-backup list",
-      "backup:restore:server2" : "docker run --rm --name clickhouse-restore-backup2 --network host -v $PWD/clickhouse_db_vol2:/var/lib/clickhouse -e CLICKHOUSE_DATA_PATH=/var/lib/clickhouse -e CLICKHOUSE_HOST=localhost -e CLICKHOUSE_PORT=9001 -p 8124:8123 -p 9001:9000 alexakulov/clickhouse-backup restore \"my_backup\""
+      "backup:create:server1" : "docker run --rm --name clickhouse-create-backup1 --network host -v $HOME/tmp/clickhouse-db/clickhouse_db_vol1:/var/lib/clickhouse -e CLICKHOUSE_DATA_PATH=/var/lib/clickhouse -e CLICKHOUSE_HOST=localhost -e CLICKHOUSE_PORT=9000 -p 8123:8123 -p 9000:9000 alexakulov/clickhouse-backup create \"my_backup_$(date -u +%Y-%m-%dT%H-%M-%S)\"",
+      "backup:create:server:francecentral" : "docker run --rm --name clickhouse-create-backup-francecentral --network host -v $HOME/tmp/clickhouse-db/franceCentral:/var/lib/clickhouse -e CLICKHOUSE_DATA_PATH=/var/lib/clickhouse -e CLICKHOUSE_HOST=localhost -e CLICKHOUSE_TIMEOUT=120m -p 8125:8123 -p 9002:9000 alexakulov/clickhouse-backup:master create \"my_backup_$(date -u +%Y-%m-%dT%H-%M-%S)\"",
+      "backup:clean:server1" : "docker run --rm --name clickhouse-create-backup1 --network host -v $HOME/tmp/clickhouse-db/clickhouse_db_vol1:/var/lib/clickhouse -e CLICKHOUSE_DATA_PATH=/var/lib/clickhouse -e CLICKHOUSE_HOST=localhost -e CLICKHOUSE_PORT=9000 -p 8123:8123 -p 9000:9000 alexakulov/clickhouse-backup clean",
+      "backup:clean:server:francecentral" : "docker run --rm --name clickhouse-create-backup-francecentral --network host -v $HOME/tmp/clickhouse-db/franceCentral:/var/lib/clickhouse -e CLICKHOUSE_DATA_PATH=/var/lib/clickhouse -e CLICKHOUSE_HOST=localhost -e CLICKHOUSE_PORT=9002 -p 8125:8123 -p 9002:9000 alexakulov/clickhouse-backup clean",
+      "backup:ls:server1" : "docker run --rm --network host -v $HOME/tmp/clickhouse-db/clickhouse_db_vol1:/var/lib/clickhouse -e CLICKHOUSE_DATA_PATH=/var/lib/clickhouse -e CLICKHOUSE_HOST=localhost -e CLICKHOUSE_PORT=9000 -p 8123:8123 -p 9000:9000 alexakulov/clickhouse-backup list",
+
+      "backup:restore:server2" : "docker run --rm --name clickhouse-restore-backup2 --network host -v $HOME/tmp/clickhouse-db/clickhouse_db_vol2:/var/lib/clickhouse -e CLICKHOUSE_DATA_PATH=/var/lib/clickhouse -e CLICKHOUSE_HOST=localhost -e CLICKHOUSE_PORT=9001 -p 8124:8123 -p 9001:9000 alexakulov/clickhouse-backup restore \"my_backup\""
     }
   }
   
