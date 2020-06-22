@@ -36,7 +36,8 @@
       "backup:download-binary" : "wget https://github.com/AlexAkulov/clickhouse-backup/releases/download/v0.5.2/clickhouse-backup.tar.gz && tar -zxvf clickhouse-backup.tar.gz",
       "backup:create:server1" : "docker run --rm --name clickhouse-create-backup1 --network host -v $PWD/clickhouse_db_vol1:/var/lib/clickhouse -e CLICKHOUSE_DATA_PATH=/var/lib/clickhouse -e CLICKHOUSE_HOST=localhost -e CLICKHOUSE_PORT=9000 -p 8123:8123 -p 9000:9000 alexakulov/clickhouse-backup create \"my_backup_$(date -u +%Y-%m-%dT%H-%M-%S)\"",
       "backup:clean:server1" : "docker run --rm --name clickhouse-create-backup1 --network host -v $PWD/clickhouse_db_vol1:/var/lib/clickhouse -e CLICKHOUSE_DATA_PATH=/var/lib/clickhouse -e CLICKHOUSE_HOST=localhost -e CLICKHOUSE_PORT=9000 -p 8123:8123 -p 9000:9000 alexakulov/clickhouse-backup clean",
-      "backup:ls:server1" : "docker run --rm --network host -v $PWD/clickhouse_db_vol1:/var/lib/clickhouse -e CLICKHOUSE_DATA_PATH=/var/lib/clickhouse -e CLICKHOUSE_HOST=localhost -e CLICKHOUSE_PORT=9000 -p 8123:8123 -p 9000:9000 alexakulov/clickhouse-backup list"
+      "backup:ls:server1" : "docker run --rm --network host -v $PWD/clickhouse_db_vol1:/var/lib/clickhouse -e CLICKHOUSE_DATA_PATH=/var/lib/clickhouse -e CLICKHOUSE_HOST=localhost -e CLICKHOUSE_PORT=9000 -p 8123:8123 -p 9000:9000 alexakulov/clickhouse-backup list",
+      "backup:restore:server2" : "docker run --rm --name clickhouse-restore-backup2 --network host -v $PWD/clickhouse_db_vol2:/var/lib/clickhouse -e CLICKHOUSE_DATA_PATH=/var/lib/clickhouse -e CLICKHOUSE_HOST=localhost -e CLICKHOUSE_PORT=9001 -p 8124:8123 -p 9001:9000 alexakulov/clickhouse-backup restore \"my_backup\""
     }
   }
   
