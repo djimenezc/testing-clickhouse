@@ -10,6 +10,7 @@
 
       "client:connect1": "docker run -it --rm --link clickhouse-server1:clickhouse-server yandex/clickhouse-client --host clickhouse-server",
       "client:connect2": "docker run -it --rm --link clickhouse-server2:clickhouse-server yandex/clickhouse-client --host clickhouse-server",
+      "client:connect:francecentral": "docker run -it --rm --link clickhouse-server-francecentral:clickhouse-server yandex/clickhouse-client --host clickhouse-server",
 
       "client:create:tutorialDb": "docker run --rm --link clickhouse-server1:clickhouse-server yandex/clickhouse-client --host clickhouse-server  --query \"CREATE DATABASE IF NOT EXISTS tutorial\"",
       "client:create:tables": "docker run --rm --link clickhouse-server1:clickhouse-server yandex/clickhouse-client --host clickhouse-server  --query \"$(cat clickhouse-backup/createHitsTables.sql)\" && docker run --rm --link clickhouse-server1:clickhouse-server yandex/clickhouse-client --host clickhouse-server  --query \"$(cat clickhouse-backup/createVisitsTables.sql)\" ",
@@ -19,7 +20,7 @@
 
       "server:start1": "docker run -d --rm -p 8123:8123 -p 9000:9000 --name clickhouse-server1 --ulimit nofile=262144:262144  --volume=$PWD/configuration/config.xml:/etc/clickhouse-server/config.xml --volume=$PWD/configuration/user.xml:/etc/clickhouse-server/users.d/user.xml --volume=$PWD/configuration/users.xml:/etc/clickhouse-server/users.xml  --volume=$PWD/logs1:/var/log/clickhouse-server/ --volume=$PWD/clickhouse_db_vol1:/var/lib/clickhouse yandex/clickhouse-server",
       "server:start2": "docker run -d --rm -p 8124:8123 -p 9001:9000 --name clickhouse-server2 --ulimit nofile=262144:262144 --volume=$PWD/clickhouse_db_vol2:/var/lib/clickhouse  yandex/clickhouse-server",
-      "server:start:francecentral": "docker run -d --rm -p 8125:8123 -p 9002:9000 --name clickhouse-server-francecentral --ulimit nofile=262144:262144 --volume=$PWD/francecentral:/var/lib/clickhouse yandex/clickhouse-server",
+      "server:start:francecentral": "docker run -d --rm -p 8125:8123 -p 9002:9000 --name clickhouse-server-francecentral --ulimit nofile=262144:262144 --volume=$PWD/logs-francecentral:/var/log/clickhouse-server/ --volume=$PWD/francecentral:/var/lib/clickhouse yandex/clickhouse-server",
 
       "server:stop1" : "docker stop clickhouse-server1",
       "server:stop2" : "docker stop clickhouse-server2",
@@ -28,6 +29,7 @@
       "server:remove2" : "docker rm clickhouse-server2",
       "server:connectssh1" : "docker exec -it clickhouse-server1 /bin/sh",
       "server:connectssh2" : "docker exec -it clickhouse-server2 /bin/sh",
+      "server:connectssh:francecentral" : "docker exec -it clickhouse-server-francecentral /bin/sh",
 
       "data:download:ontime": "rm -rf download/ontime.tar && wget https://clickhouse-datasets.s3.yandex.net/ontime/partitions/ontime.tar && mv ontime.tar download",
       "data:download:metricts1" : "curl https://clickhouse-datasets.s3.yandex.net/visits/tsv/visits_v1.tsv.xz | unxz --threads=`sysctl -n hw.physicalcpu` > download/visits_v1.tsv",
